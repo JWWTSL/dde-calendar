@@ -312,12 +312,11 @@ QString Incidence::instanceIdentifier() const
 void Incidence::recreate()
 {
     const QDateTime nowUTC = QDateTime::currentDateTimeUtc();
-    qCDebug(icalLog) << "Recreating incidence with new UID";
     setCreated(nowUTC);
 
     setSchedulingID(QString(), CalFormat::createUniqueId());
     setRevision(0);
-    setLastModified(nowUTC);
+    setLastModified(nowUTC); // NOLINT false clang-analyzer-optin.cplusplus.VirtualCall
 }
 
 void Incidence::setLastModified(const QDateTime &lm)
@@ -329,7 +328,6 @@ void Incidence::setLastModified(const QDateTime &lm)
 
 void Incidence::setReadOnly(bool readOnly)
 {
-    qCDebug(icalLog) << "Setting incidence read-only state to:" << readOnly;
     IncidenceBase::setReadOnly(readOnly);
     if (d->mRecurrence) {
         d->mRecurrence->setRecurReadOnly(readOnly);
@@ -339,10 +337,8 @@ void Incidence::setReadOnly(bool readOnly)
 void Incidence::setLocalOnly(bool localOnly)
 {
     if (mReadOnly) {
-        qCDebug(icalLog) << "Cannot set local-only on read-only incidence";
         return;
     }
-    qCDebug(icalLog) << "Setting incidence local-only state to:" << localOnly;
     d->mLocalOnly = localOnly;
 }
 

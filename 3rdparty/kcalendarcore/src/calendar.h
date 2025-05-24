@@ -46,9 +46,6 @@ This API needs serious cleaning up:
 #include <QObject>
 #include <QTimeZone>
 
-// Logging category for calendar related operations
-Q_DECLARE_LOGGING_CATEGORY(calendarLog)
-
 /** Namespace for all KCalendarCore types. */
 namespace KCalendarCore {
 class CalFilter;

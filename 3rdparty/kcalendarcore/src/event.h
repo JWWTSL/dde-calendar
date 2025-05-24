@@ -16,10 +16,8 @@
 #define KCALCORE_EVENT_H
 
 #include "incidence.h"
-#include <QTimeZone>
-#include <QLoggingCategory>
 
-Q_DECLARE_LOGGING_CATEGORY(lcEvent)
+#include <QTimeZone>
 
 namespace KCalendarCore {
 /**

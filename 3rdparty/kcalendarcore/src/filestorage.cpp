@@ -25,8 +25,6 @@
 
 using namespace KCalendarCore;
 
-Q_LOGGING_CATEGORY(fileStorageLog, "calendar.storage.file")
-
 /*
   Private class that helps to provide binary compatibility between releases.
 */
@@ -89,7 +87,7 @@ bool FileStorage::open()
 bool FileStorage::load()
 {
     if (d->mFileName.isEmpty()) {
-        qCWarning(fileStorageLog) << "Empty filename while trying to load";
+        qWarning() << "Empty filename while trying to load";
         return false;
     }
 
@@ -99,40 +97,37 @@ bool FileStorage::load()
     QString productId;
     // First try the supplied format. Otherwise fall through to iCalendar, then
     // to vCalendar
-    qCDebug(fileStorageLog) << "Attempting to load calendar from file:" << d->mFileName;
     success = saveFormat() && saveFormat()->load(calendar(), d->mFileName);
     if (success) {
         productId = saveFormat()->loadedProductId();
-        qCInfo(fileStorageLog) << "Successfully loaded calendar with format:" << productId;
     } else {
         ICalFormat iCal;
-        qCDebug(fileStorageLog) << "Trying to load as iCalendar format";
+
         success = iCal.load(calendar(), d->mFileName);
 
         if (success) {
             productId = iCal.loadedProductId();
-            qCInfo(fileStorageLog) << "Successfully loaded calendar as iCalendar format:" << productId;
         } else {
             if (iCal.exception()) {
                 if ((iCal.exception()->code() == Exception::ParseErrorIcal) || (iCal.exception()->code() == Exception::CalVersion1)) {
                     // Possible vCalendar or invalid iCalendar encountered
-                    qCWarning(fileStorageLog) << d->mFileName << "is an invalid iCalendar or possibly a vCalendar, trying vCalendar format";
+                    qDebug() << d->mFileName << " is an invalid iCalendar or possibly a vCalendar.";
+                    qDebug() << "Try to load it as a vCalendar";
                     VCalFormat vCal;
                     success = vCal.load(calendar(), d->mFileName);
                     productId = vCal.loadedProductId();
                     if (!success) {
                         if (vCal.exception()) {
-                            qCCritical(fileStorageLog) << d->mFileName << "is not a valid vCalendar file. Exception code:" << vCal.exception()->code();
+                            qWarning() << d->mFileName << " is not a valid vCalendar file."
+                                       << " exception code " << vCal.exception()->code();
                         }
                         return false;
                     }
-                    qCInfo(fileStorageLog) << "Successfully loaded calendar as vCalendar format:" << productId;
                 } else {
-                    qCCritical(fileStorageLog) << "Failed to load calendar. Exception code:" << iCal.exception()->code();
                     return false;
                 }
             } else {
-                qCCritical(fileStorageLog) << "Failed to load calendar. No exception set.";
+                qWarning() << "There should be an exception set.";
                 return false;
             }
         }
@@ -140,7 +135,6 @@ bool FileStorage::load()
 
     calendar()->setProductId(productId);
     calendar()->setModified(false);
-    qCDebug(fileStorageLog) << "Calendar loading completed successfully";
 
     return true;
 }
@@ -148,23 +142,20 @@ bool FileStorage::load()
 bool FileStorage::save()
 {
     if (d->mFileName.isEmpty()) {
-        qCWarning(fileStorageLog) << "Empty filename while trying to save";
         return false;
     }
 
     CalFormat *format = d->mSaveFormat ? d->mSaveFormat : new ICalFormat;
-    qCDebug(fileStorageLog) << "Saving calendar to file:" << d->mFileName;
 
     bool success = format->save(calendar(), d->mFileName);
 
     if (success) {
         calendar()->setModified(false);
-        qCInfo(fileStorageLog) << "Calendar saved successfully";
     } else {
         if (!format->exception()) {
-            qCCritical(fileStorageLog) << "Failed to save calendar. No exception set.";
+            qDebug() << "Error. There should be an exception set.";
         } else {
-            qCCritical(fileStorageLog) << "Failed to save calendar. Exception code:" << format->exception()->code();
+            qDebug() << int(format->exception()->code());
         }
     }
 

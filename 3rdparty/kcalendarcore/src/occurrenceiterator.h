@@ -17,12 +17,8 @@
 #define KCALCORE_OCCURRENCEITERATOR_H
 
 #include "incidence.h"
-#include <QLoggingCategory>
 
 namespace KCalendarCore {
-
-Q_DECLARE_LOGGING_CATEGORY(occurrenceLog)
-
 class Calendar;
 /**
  * Iterate over calendar items in a calendar.

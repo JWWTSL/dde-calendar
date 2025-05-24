@@ -21,9 +21,6 @@
 
 using namespace KCalendarCore;
 
-// Define logging category
-Q_LOGGING_CATEGORY(attachmentLog, "calendar.attachment")
-
 /**
   Private class that helps to provide binary compatibility between releases.
   @internal
@@ -98,7 +95,6 @@ QString Attachment::uri() const
 
 void Attachment::setUri(const QString &uri)
 {
-    qCDebug(attachmentLog) << "Setting attachment URI to:" << uri;
     d->mUri = uri;
     d->mBinary = false;
 }
@@ -128,7 +124,6 @@ QByteArray Attachment::decodedData() const
 
 void Attachment::setDecodedData(const QByteArray &data)
 {
-    qCDebug(attachmentLog) << "Setting decoded attachment data, size:" << data.size();
     setData(data.toBase64());
     d->mDecodedDataCache = data;
     d->mSize = d->mDecodedDataCache.size();
@@ -136,7 +131,6 @@ void Attachment::setDecodedData(const QByteArray &data)
 
 void Attachment::setData(const QByteArray &base64)
 {
-    qCDebug(attachmentLog) << "Setting attachment binary data, size:" << base64.size();
     d->mEncodedData = base64;
     d->mBinary = true;
     d->mDecodedDataCache = QByteArray();
@@ -162,7 +156,6 @@ QString Attachment::mimeType() const
 
 void Attachment::setMimeType(const QString &mime)
 {
-    qCDebug(attachmentLog) << "Setting attachment MIME type to:" << mime;
     d->mMimeType = mime;
 }
 
@@ -173,7 +166,6 @@ bool Attachment::showInline() const
 
 void Attachment::setShowInline(bool showinline)
 {
-    qCDebug(attachmentLog) << "Setting attachment show inline to:" << showinline;
     d->mShowInline = showinline;
 }
 
@@ -184,7 +176,6 @@ QString Attachment::label() const
 
 void Attachment::setLabel(const QString &label)
 {
-    qCDebug(attachmentLog) << "Setting attachment label to:" << label;
     d->mLabel = label;
 }
 
@@ -195,7 +186,6 @@ bool Attachment::isLocal() const
 
 void Attachment::setLocal(bool local)
 {
-    qCDebug(attachmentLog) << "Setting attachment local flag to:" << local;
     d->mLocal = local;
 }
 

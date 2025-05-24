@@ -25,9 +25,6 @@
 #include "recurrence.h"
 
 #include <QMetaType>
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(icalLog)
 
 //@cond PRIVATE
 // Value used to signal invalid/unset latitude or longitude.

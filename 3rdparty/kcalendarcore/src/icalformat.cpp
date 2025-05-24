@@ -67,13 +67,13 @@ ICalFormat::~ICalFormat()
 
 bool ICalFormat::load(const Calendar::Ptr &calendar, const QString &fileName)
 {
-    qCDebug(icalLog) << "Loading calendar from file:" << fileName;
+    qDebug() << fileName;
 
     clearException();
 
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
-        qCCritical(icalLog) << "Load error: unable to open" << fileName;
+        qCritical() << "load error: unable to open " << fileName;
         setException(new Exception(Exception::LoadError));
         return false;
     }
@@ -95,13 +95,12 @@ bool ICalFormat::load(const Calendar::Ptr &calendar, const QString &fileName)
 
 bool ICalFormat::save(const Calendar::Ptr &calendar, const QString &fileName)
 {
-    qCDebug(icalLog) << "Saving calendar to file:" << fileName;
+    qDebug() << fileName;
 
     clearException();
 
     QString text = toString(calendar);
     if (text.isEmpty()) {
-        qCWarning(icalLog) << "Failed to convert calendar to string";
         return false;
     }
 

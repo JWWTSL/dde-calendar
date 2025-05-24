@@ -21,9 +21,6 @@
 #include <QSharedDataPointer>
 #include <QString>
 
-// Logging category for attachment related operations
-Q_DECLARE_LOGGING_CATEGORY(attachmentLog)
-
 namespace KCalendarCore {
 /**
   @brief

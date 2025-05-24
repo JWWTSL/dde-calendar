@@ -25,8 +25,6 @@
 
 using namespace KCalendarCore;
 
-Q_LOGGING_CATEGORY(lcExceptions, "kcalendarcore.exceptions")
-
 namespace KCalendarCore {
 class ExceptionPrivate
 {
@@ -47,12 +45,10 @@ Exception::Exception(const ErrorCode code, const QStringList &arguments)
 {
     d->mCode = code;
     d->mArguments = arguments;
-    qCCritical(lcExceptions) << "Exception created with code:" << code << "arguments:" << arguments;
 }
 
 Exception::~Exception()
 {
-    qCDebug(lcExceptions) << "Exception destroyed";
 }
 
 Exception::ErrorCode Exception::code() const

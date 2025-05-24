@@ -25,8 +25,6 @@
 
 using namespace KCalendarCore;
 
-Q_LOGGING_CATEGORY(lcEvent, "kcalendarcore.event")
-
 /**
   Private class that helps to provide binary compatibility between releases.
   @internal
@@ -46,21 +44,18 @@ public:
 Event::Event()
     : d(new KCalendarCore::Event::Private)
 {
-    qCDebug(lcEvent) << "Creating empty event";
 }
 
 Event::Event(const Event &other)
     : Incidence(other)
     , d(new KCalendarCore::Event::Private(*other.d))
 {
-    qCDebug(lcEvent) << "Creating event by copying from another event";
 }
 
 Event::Event(const Incidence &other)
     : Incidence(other)
     , d(new KCalendarCore::Event::Private)
 {
-    qCDebug(lcEvent) << "Creating event from incidence";
 }
 
 Event::~Event()
@@ -106,7 +101,6 @@ QByteArray Event::typeStr() const
 
 void Event::setDtStart(const QDateTime &dt)
 {
-    qCDebug(lcEvent) << "Setting event start date/time to" << dt;
     d->mMultiDayValid = false;
     Incidence::setDtStart(dt);
 }
@@ -114,11 +108,9 @@ void Event::setDtStart(const QDateTime &dt)
 void Event::setDtEnd(const QDateTime &dtEnd)
 {
     if (mReadOnly) {
-        qCWarning(lcEvent) << "Cannot set end date/time - event is read-only";
         return;
     }
 
-    qCDebug(lcEvent) << "Setting event end date/time to" << dtEnd;
     if (d->mDtEnd != dtEnd || hasDuration() == dtEnd.isValid()) {
         update();
         d->mDtEnd = dtEnd;
@@ -126,7 +118,6 @@ void Event::setDtEnd(const QDateTime &dtEnd)
         setHasDuration(!dtEnd.isValid());
         setFieldDirty(FieldDtEnd);
         updated();
-        qCDebug(lcEvent) << "End date/time updated successfully";
     }
 }
 
@@ -168,11 +159,8 @@ bool Event::hasEndDate() const
 
 bool Event::isMultiDay(const QTimeZone &zone) const
 {
-    qCDebug(lcEvent) << "Checking if event is multi-day for timezone" << zone.id();
-    
     // First off, if spec's not valid, we can check for cache
     if (!zone.isValid() && d->mMultiDayValid) {
-        qCDebug(lcEvent) << "Using cached multi-day state:" << d->mMultiDay;
         return d->mMultiDay;
     }
 
@@ -200,7 +188,6 @@ bool Event::isMultiDay(const QTimeZone &zone) const
     // Also update Cache if spec is invalid
     d->mMultiDayValid = true;
     d->mMultiDay = multi;
-    qCDebug(lcEvent) << "Calculated multi-day state:" << multi;
     return multi;
 }
 
@@ -216,10 +203,8 @@ void Event::shiftTimes(const QTimeZone &oldZone, const QTimeZone &newZone)
 void Event::setTransparency(Event::Transparency transparency)
 {
     if (mReadOnly) {
-        qCWarning(lcEvent) << "Cannot set transparency - event is read-only";
         return;
     }
-    qCDebug(lcEvent) << "Setting event transparency to" << transparency;
     update();
     d->mTransparency = transparency;
     setFieldDirty(FieldTransparency);
@@ -247,11 +232,8 @@ void Event::setAllDay(bool allday)
 
 void Event::setLunnar(bool lunnar)
 {
-    if (d->mIsLunnar == lunnar) {
-        qCDebug(lcEvent) << "Lunar state unchanged:" << lunnar;
+    if (d->mIsLunnar == lunnar)
         return;
-    }
-    qCDebug(lcEvent) << "Setting event lunar state to" << lunnar;
     update();
     d->mIsLunnar = lunnar;
     updated();

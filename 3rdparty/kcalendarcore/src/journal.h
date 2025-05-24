@@ -18,9 +18,6 @@
 #define KCALCORE_JOURNAL_H
 
 #include "incidence.h"
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(journalLog)
 
 namespace KCalendarCore {
 /**

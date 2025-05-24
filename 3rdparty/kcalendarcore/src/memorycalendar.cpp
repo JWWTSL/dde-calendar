@@ -25,8 +25,6 @@
 #include <QDate>
 #include <QDebug>
 
-Q_LOGGING_CATEGORY(memCalLog, "calendar.memory")
-
 #include <functional>
 
 using namespace KCalendarCore;
@@ -188,7 +186,6 @@ void MemoryCalendar::doSetTimeZone(const QTimeZone &timeZone)
 
 void MemoryCalendar::close()
 {
-    qCInfo(memCalLog) << "Closing memory calendar";
     setObserversEnabled(false);
 
     // Don't call the virtual function deleteEvents() etc, the base class might have
@@ -207,12 +204,10 @@ void MemoryCalendar::close()
     setModified(false);
 
     setObserversEnabled(true);
-    qCDebug(memCalLog) << "Memory calendar closed successfully";
 }
 
 bool MemoryCalendar::deleteIncidence(const Incidence::Ptr &incidence)
 {
-    qCDebug(memCalLog) << "Deleting incidence with UID:" << incidence->uid();
     // Handle orphaned children
     // relations is an Incidence's property, not a Todo's, so
     // we remove relations in deleteIncidence, not in deleteTodo.
@@ -234,9 +229,7 @@ bool MemoryCalendar::deleteIncidence(const Incidence::Ptr &incidence)
         if (!incidence->hasRecurrenceId() && incidence->recurs()) {
             deleteIncidenceInstances(incidence);
         }
-        qCInfo(memCalLog) << "Successfully deleted incidence with UID:" << uid;
     } else {
-        qCWarning(memCalLog) << "Failed to delete" << incidence->typeStr() << "with UID:" << uid;
         qWarning() << incidence->typeStr() << " not found. uid=" << uid;
     }
     notifyIncidenceDeleted(incidence);
@@ -336,7 +329,6 @@ void MemoryCalendar::Private::insertIncidence(const Incidence::Ptr &incidence)
 
 bool MemoryCalendar::addIncidence(const Incidence::Ptr &incidence)
 {
-    qCDebug(memCalLog) << "Adding incidence of type:" << incidence->typeStr() << "with UID:" << incidence->uid();
     d->insertIncidence(incidence);
 
     notifyIncidenceAdded(incidence);
@@ -346,7 +338,6 @@ bool MemoryCalendar::addIncidence(const Incidence::Ptr &incidence)
     setupRelations(incidence);
 
     setModified(true);
-    qCDebug(memCalLog) << "Successfully added incidence";
 
     return true;
 }
@@ -537,7 +528,6 @@ void MemoryCalendar::incidenceUpdate(const QString &uid, const QDateTime &recurr
 
     if (inc) {
         if (!d->mIncidenceBeingUpdated.isEmpty()) {
-            qCWarning(memCalLog) << "Incidence::update() called twice without an updated() call in between";
             qWarning() << "Incidence::update() called twice without an updated() call in between.";
         }
 
@@ -548,7 +538,6 @@ void MemoryCalendar::incidenceUpdate(const QString &uid, const QDateTime &recurr
         if (dt.isValid()) {
             d->mIncidencesForDate[inc->type()].remove(dt.toTimeZone(timeZone()).date(), inc);
         }
-        qCDebug(memCalLog) << "Updated incidence with UID:" << uid;
     }
 }
 

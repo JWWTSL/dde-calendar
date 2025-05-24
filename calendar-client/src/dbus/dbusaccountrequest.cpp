@@ -370,9 +370,8 @@ void DbusAccountRequest::slotDbusCall(const QDBusMessage &msg)
     }
 }
 
-void DbusAccountRequest::onPropertiesChanged(const QString &interfaceName, const QVariantMap &changedProperties, const QStringList &invalidatedProperties)
+void DbusAccountRequest::onPropertiesChanged(const QString &, const QVariantMap &changedProperties, const QStringList &)
 {
-    qCDebug(accountRequest) << "Processing properties changed for interface:" << interfaceName;
     for (QVariantMap::const_iterator it = changedProperties.cbegin(), end = changedProperties.cend(); it != end; ++it) {
         if (it.key() == "syncState") {
             int state = it.value().toInt();
@@ -392,13 +391,6 @@ void DbusAccountRequest::onPropertiesChanged(const QString &interfaceName, const
         }
         if (it.key() == "accountState") {
             emit signalAccountStateChange(getAccountState());
-        }
-        if (it.key() == "firstDayOfWeek") {
-            qCDebug(accountRequest) << "First day of week property changed";
-            getCalendarGeneralSettings();
-        } else if (it.key() == "timeFormatType") {
-            qCDebug(accountRequest) << "Time format type property changed";
-            getCalendarGeneralSettings();
         }
     }
 }

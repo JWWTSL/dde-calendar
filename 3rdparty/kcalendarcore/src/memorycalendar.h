@@ -20,9 +20,6 @@
 #define KCALCORE_MEMORYCALENDAR_H
 
 #include "calendar.h"
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(memCalLog)
 
 namespace KCalendarCore {
 /**

@@ -25,10 +25,8 @@
 
 #include <QString>
 #include <QStringList>
-#include <memory>
-#include <QLoggingCategory>
 
-Q_DECLARE_LOGGING_CATEGORY(lcExceptions)
+#include <memory>
 
 namespace KCalendarCore {
 class ExceptionPrivate;

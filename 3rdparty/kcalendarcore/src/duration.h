@@ -21,9 +21,6 @@
 #include <QDataStream>
 #include <QHash>
 #include <QMetaType>
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(lcDuration)
 
 class QDateTime;
 

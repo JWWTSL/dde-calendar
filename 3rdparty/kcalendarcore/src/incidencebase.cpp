@@ -31,8 +31,6 @@
 
 #include <QStringList>
 
-Q_LOGGING_CATEGORY(incidenceLog, "calendar.incidence")
-
 #define KCALCORE_MAGIC_NUMBER 0xCA1C012E
 #define KCALCORE_SERIALIZATION_VERSION 1
 
@@ -214,7 +212,6 @@ bool IncidenceBase::accept(Visitor &v, const IncidenceBase::Ptr &incidence)
 void IncidenceBase::setUid(const QString &uid)
 {
     if (d->mUid != uid) {
-        qCDebug(incidenceLog) << "Setting new UID:" << uid;
         update();
         d->mUid = uid;
         d->mDirtyFields.insert(FieldUid);
@@ -229,7 +226,6 @@ QString IncidenceBase::uid() const
 
 void IncidenceBase::setLastModified(const QDateTime &lm)
 {
-    qCDebug(incidenceLog) << "Setting last modified time to:" << lm;
     // DON'T! updated() because we call this from
     // Calendar::updateEvent().
 
@@ -251,7 +247,6 @@ QDateTime IncidenceBase::lastModified() const
 
 void IncidenceBase::setOrganizer(const Person &organizer)
 {
-    qCDebug(incidenceLog) << "Setting organizer to:" << organizer.fullName();
     update();
     // we don't check for readonly here, because it is
     // possible that by setting the organizer we are changing
@@ -415,7 +410,6 @@ QStringList IncidenceBase::contacts() const
 void IncidenceBase::addAttendee(const Attendee &a, bool doupdate)
 {
     if (a.isNull() || mReadOnly) {
-        qCWarning(incidenceLog) << "Failed to add attendee - null attendee or readonly mode";
         return;
     }
     Q_ASSERT(!a.uid().isEmpty());
@@ -424,7 +418,6 @@ void IncidenceBase::addAttendee(const Attendee &a, bool doupdate)
         update();
     }
 
-    qCDebug(incidenceLog) << "Adding attendee:" << a.fullName();
     d->mAttendees.append(a);
     if (doupdate) {
         d->mDirtyFields.insert(FieldAttendees);
@@ -569,7 +562,6 @@ void IncidenceBase::update()
     if (!d->mUpdateGroupLevel) {
         d->mUpdatedPending = true;
         const auto rid = recurrenceId();
-        qCDebug(incidenceLog) << "Updating incidence with UID:" << uid() << "RecurrenceId:" << rid;
         for (IncidenceObserver *o : qAsConst(d->mObservers)) {
             o->incidenceUpdate(uid(), rid);
         }
@@ -582,7 +574,6 @@ void IncidenceBase::updated()
         d->mUpdatedPending = true;
     } else {
         const auto rid = recurrenceId();
-        qCDebug(incidenceLog) << "Incidence updated - UID:" << uid() << "RecurrenceId:" << rid;
         for (IncidenceObserver *o : qAsConst(d->mObservers)) {
             o->incidenceUpdated(uid(), rid);
         }

@@ -21,9 +21,6 @@
 
 #include "customproperties.h"
 
-// Logging category for attendee related operations
-Q_DECLARE_LOGGING_CATEGORY(attendeeLog)
-
 namespace KCalendarCore {
 /**
   @brief
